@@ -1,7 +1,7 @@
 <?php
 include "koneksi.php";
 
-// Simpan data jika ada postingan form
+// 1. PROSES INPUT AMAN DATA (CREATE PAKAI PDO PREPARED STATEMENTS)
 if (isset($_POST['kirim'])) {
     $nama_pelapor   = $_POST['nama_pelapor'];
     $nama_fasilitas = $_POST['nama_fasilitas'];
@@ -10,31 +10,43 @@ if (isset($_POST['kirim'])) {
     $deskripsi      = $_POST['deskripsi'];
     $prioritas      = $_POST['prioritas'];
 
+    // PDO Prepared Statements: Menghalangi SQL Injection total!
     $sql = "INSERT INTO laporan_kerusakan (nama_pelapor, nama_fasilitas, lokasi, id_kategori, deskripsi, prioritas) 
-            VALUES ('$nama_pelapor', '$nama_fasilitas', '$lokasi', '$id_kategori', '$deskripsi', '$prioritas')";
-    mysqli_query($conn, $sql);
+            VALUES (:nama_pelapor, :nama_fasilitas, :lokasi, :id_kategori, :deskripsi, :prioritas)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':nama_pelapor'   => $nama_pelapor,
+        ':nama_fasilitas' => $nama_fasilitas,
+        ':lokasi'         => $lokasi,
+        ':id_kategori'    => $id_kategori,
+        ':deskripsi'      => $deskripsi,
+        ':prioritas'      => $prioritas
+    ]);
+
     header("Location: index.php");
     exit();
 }
 
-// Ambil data untuk tabel
-$tampil = mysqli_query($conn, "SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr 
-                                JOIN kategori_fasilitas kf ON lr.id_kategori = kf.id_kategori 
-                                ORDER BY lr.id_laporan DESC");
+// 2. PROSES TAMPIL DATA (READ DENGAN PDO JOIN)
+$query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr 
+                       JOIN kategori_fasilitas kf ON lr.id_kategori = kf.id_kategori 
+                       ORDER BY lr.id_laporan DESC");
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Lapor Kerusakan</title>
-    <link href="sts.css" rel="stylesheet">
+    <title>Lapor Kerusakan (Sistem PDO)</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 
     <h2>Sistem Pelaporan Kerusakan Fasilitas Sekolah</h2>
     
     <div class="baris">
+        <!-- SEKTOR KIRI: FORM -->
         <div class="kiri kotak">
             <h3>Buat Laporan</h3>
             <form action="" method="POST">
@@ -59,6 +71,7 @@ $tampil = mysqli_query($conn, "SELECT lr.*, kf.nama_kategori FROM laporan_kerusa
             </form>
         </div>
 
+        <!-- SEKTOR KANAN: TABEL -->
         <div class="kanan kotak">
             <h3>Daftar Laporan</h3>
             <table>
@@ -75,17 +88,18 @@ $tampil = mysqli_query($conn, "SELECT lr.*, kf.nama_kategori FROM laporan_kerusa
                 <tbody>
                     <?php 
                     $no = 1;
-                    while ($data = mysqli_fetch_array($tampil)) { 
+                    // Format perulangan PDO fetch standar sekolah
+                    while ($data = $query->fetch(PDO::FETCH_ASSOC)) { 
                     ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td>
-                            <b><?php echo $data['nama_fasilitas']; ?></b><br>
-                            <small style="color: gray;"><?php echo $data['nama_kategori']; ?></small>
+                            <b><?php echo htmlspecialchars($data['nama_fasilitas']); ?></b><br>
+                            <small style="color: gray;"><?php echo htmlspecialchars($data['nama_kategori']); ?></small>
                         </td>
-                        <td><?php echo $data['lokasi']; ?></td>
-                        <td><?php echo $data['nama_pelapor']; ?></td>
-                        <td><?php echo $data['deskripsi']; ?></td>
+                        <td><?php echo htmlspecialchars($data['lokasi']); ?></td>
+                        <td><?php echo htmlspecialchars($data['nama_pelapor']); ?></td>
+                        <td><?php echo htmlspecialchars($data['deskripsi']); ?></td>
                         <td><?php echo $data['prioritas']; ?></td>
                     </tr>
                     <?php } ?>

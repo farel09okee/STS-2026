@@ -1,18 +1,18 @@
 <?php
+// koneksi.php - Menggunakan PDO (PHP Data Objects) untuk Keamanan Tingkat Tinggi
 
-$host     = "localhost";
-$username = "root";
-$password = ""; 
-$database = "db_laporan_fasilitas"; 
+$host   = "localhost";
+$user   = "root";
+$pass   = "";
+$db     = "db_laporan_fasilitas";
 
-// Membuat koneksi ke MySQL
-$conn = new mysqli($host, $username, $password, $database);
-
-// Periksa apakah koneksi berhasil atau gagal
-if ($conn->connect_error) {
-    die("Koneksi ke database gagal: " . $conn->connect_error);
+try {
+    // Membuat koneksi aman dengan sistem PDO
+    $conn = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
+    
+    // Setel pengaturan error agar memunculkan exception jika ada masalah
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Koneksi PDO ke database gagal: " . $e->getMessage());
 }
-
-// Set charset agar mendukung format data teks di database dengan baik
-$conn->set_charset("utf8mb4");
 ?>
