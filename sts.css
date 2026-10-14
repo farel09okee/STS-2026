@@ -1,0 +1,38 @@
+body { font-family: sans-serif; 
+    background: #f4f6f9; 
+    padding: 20px; }
+
+    .baris { display: flex; 
+    gap: 20px; }
+.kiri { width: 30%; }
+
+.kanan { width: 70%; }
+
+.kotak { background: white; 
+    padding: 20px; 
+    border-radius: 8px; 
+    border: 1px solid #ddd; }
+
+    input, select, textarea { width: 100%; 
+    padding: 8px;
+     margin-bottom: 10px; 
+     border: 1px solid #ccc; 
+     border-radius: 4px; }
+
+     button { width: 100%; 
+    padding: 10px; 
+    background: rgb(36, 56, 110); 
+    color: white; border: none; 
+    border-radius: 4px; font-weight: bold; 
+    cursor: pointer; }
+
+    table { width: 100%; 
+    border-collapse: collapse;
+     background: white; }
+
+     th, td { padding: 10px; 
+    border: 1px solid #ddd; 
+    text-align: left; }
+
+    th { background: rgb(36, 56, 110); 
+    color: white; }
