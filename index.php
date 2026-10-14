@@ -39,7 +39,7 @@ $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr
 <head>
     <meta charset="UTF-8">
     <title>Lapor Kerusakan (Sistem PDO)</title>
-    <link href="style.css" rel="stylesheet">
+    <link href="sts.css" rel="stylesheet">
 </head>
 <body>
 
