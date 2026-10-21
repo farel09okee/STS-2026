@@ -1,7 +1,6 @@
 <?php
 include "koneksi.php";
 
-// 1. PROSES INPUT AMAN DATA (CREATE PAKAI PDO PREPARED STATEMENTS)
 if (isset($_POST['kirim'])) {
     $nama_pelapor   = $_POST['nama_pelapor'];
     $nama_fasilitas = $_POST['nama_fasilitas'];
@@ -10,7 +9,6 @@ if (isset($_POST['kirim'])) {
     $deskripsi      = $_POST['deskripsi'];
     $prioritas      = $_POST['prioritas'];
 
-    // PDO Prepared Statements: Menghalangi SQL Injection total!
     $sql = "INSERT INTO laporan_kerusakan (nama_pelapor, nama_fasilitas, lokasi, id_kategori, deskripsi, prioritas) 
             VALUES (:nama_pelapor, :nama_fasilitas, :lokasi, :id_kategori, :deskripsi, :prioritas)";
     
@@ -28,7 +26,6 @@ if (isset($_POST['kirim'])) {
     exit();
 }
 
-// 2. PROSES TAMPIL DATA (READ DENGAN PDO JOIN)
 $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr 
                        JOIN kategori_fasilitas kf ON lr.id_kategori = kf.id_kategori 
                        ORDER BY lr.id_laporan DESC");
@@ -46,7 +43,6 @@ $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr
     <h2>Sistem Pelaporan Kerusakan Fasilitas Sekolah</h2>
     
     <div class="baris">
-        <!-- SEKTOR KIRI: FORM -->
         <div class="kiri kotak">
             <h3>Buat Laporan</h3>
             <form action="" method="POST">
@@ -71,7 +67,6 @@ $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr
             </form>
         </div>
 
-        <!-- SEKTOR KANAN: TABEL -->
         <div class="kanan kotak">
             <h3>Daftar Laporan</h3>
             <table>
@@ -88,7 +83,6 @@ $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr
                 <tbody>
                     <?php 
                     $no = 1;
-                    // Format perulangan PDO fetch standar sekolah
                     while ($data = $query->fetch(PDO::FETCH_ASSOC)) { 
                     ?>
                     <tr>
