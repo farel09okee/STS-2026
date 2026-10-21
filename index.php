@@ -81,7 +81,8 @@ $query = $conn->query("SELECT lr.*, kf.nama_kategori FROM laporan_kerusakan lr
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
+                   
+                <?php 
                     $no = 1;
                     while ($data = $query->fetch(PDO::FETCH_ASSOC)) { 
                     ?>
